@@ -1,4 +1,3 @@
-```luau
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 ReplicatedStorage.SwapNecromancer.OnServerEvent:Connect(function(player) -- connect when fired from the server
@@ -100,4 +99,3 @@ ReplicatedStorage.SwapUTTVM.OnServerEvent:Connect(function(player) -- connect wh
 	animScript.fall.FallAnim.AnimationId = script:WaitForChild("UTCMMoveForward").AnimationId
 	animScript.climb.ClimbAnim.AnimationId = script:WaitForChild("UTCMMoveForward").AnimationId
 end)
-```
