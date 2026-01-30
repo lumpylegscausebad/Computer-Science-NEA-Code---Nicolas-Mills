@@ -17,4 +17,7 @@ Events.Punch.OnServerEvent:Connect(function(Player)
 	if ClickAttackDebounces[Player] then -- allows new animations to begin 
 		ClickAttackDebounces[Player] = nil 
 	end 
+	LoadedPunchAnimation:GetMarkerReachedSignal("Hit"):Connect(function() -- function activates when animation reaches a certain point 
+		AttackHitboxes.CreateHitbox(Character, Vector3.new(9,9,5), 10, true) -- creates hitbox 
+	end) 
 end) 
