@@ -47,6 +47,45 @@ end
   	game:GetService("Debris"):AddItem(damageIndicatorGui, 1) -- removes the UI after 1 second has passed to prevent memory leaks and clutter 
   	textFadeTween:Play() 
   	strokeFadeTween:Play() 
-  	end 
+	local Sounds = {1, 0.8, 0.9, 1.1} -- randomise sound speed
+			-- play damage sound depending on the amount of damage dealt
+			if healthLost >= 400 then
+				if script.Parent.HumanoidRootPart.Explosion1.Playing == false then
+					script.Parent.HumanoidRootPart.Explosion1.PlaybackSpeed = Sounds[math.random(1,#Sounds)]
+					script.Parent.HumanoidRootPart.Explosion1:Play()
+				end
+			elseif healthLost >= 200 then
+				if script.Parent.HumanoidRootPart.Explosion4.Playing == false then
+					script.Parent.HumanoidRootPart.Explosion4.PlaybackSpeed = Sounds[math.random(1,#Sounds)]
+					script.Parent.HumanoidRootPart.Explosion4:Play()
+				end
+			elseif healthLost >= 100 then
+				if script.Parent.HumanoidRootPart.Explosion2.Playing == false then
+					script.Parent.HumanoidRootPart.Explosion2.PlaybackSpeed = Sounds[math.random(1,#Sounds)]
+					script.Parent.HumanoidRootPart.Explosion2:Play()
+				end
+			elseif healthLost >= 0.1 then
+				if script.Parent.HumanoidRootPart.Explosion3.Playing == false then
+					script.Parent.HumanoidRootPart.Explosion3.PlaybackSpeed = Sounds[math.random(1,#Sounds)]
+					script.Parent.HumanoidRootPart.Explosion3:Play()
+				end
+			end
+			local Players = game:GetService("Players")
+			local player = Players:GetPlayerFromCharacter(script.Parent)
+			if humanoid.Health == 0 and player:WaitForChild("PersistentValues").Lives.Value > 0 then -- determine if the player has died
+				player.PersistentValues.Lives.Value -= 1 -- remove a life
+				if player:WaitForChild("PersistentValues").Lives.Value == 0 then -- determine if the player has lost all of their lives
+					-- reset player values to default
+					local ReplicatedStorage = game:GetService("ReplicatedStorage")
+					player.TeamColor = BrickColor.new("Institutional white")
+					player:WaitForChild("PersistentValues").Character.Value = ""
+					player:WaitForChild("PersistentValues").Map.Value = ""
+					player:WaitForChild("PersistentValues").Gamemode.Value = ""
+					player:WaitForChild("PersistentValues").Team.Value = ""
+					task.wait(2)
+					ReplicatedStorage.MatchEnd:FireClient(Players:GetPlayerFromCharacter(script.Parent)) -- send player back to the Main Menu
+				end
+			end
+		end
   currentHealth = humanoid.Health -- modify the currentHealth to be the new humanoid health after the damage has been dealt 
 end) 
