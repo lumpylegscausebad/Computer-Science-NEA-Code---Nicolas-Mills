@@ -1,17 +1,16 @@
-Events.Punch.OnServerEvent:Connect(function(Player)  
-	local Character = Player.Character -- gets the players character 
-	if Debounces[Player] then -- prevents the animation overlapping 
-		return 
-	end 
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+ReplicatedStorage.Events.Punch.OnServerEvent:Connect(function(Player)  
+	local Character = Player.Character -- gets the players character  
 	Debounces[Player] = true -- to stop animation overlapping once one starts 
-	local PunchCombo = Player.Values.PunchCombo -- checks for current punch animation number 
+	local Combo = Player.Values.Combo -- checks for current punch animation number 
 	local Animation = script.AnimationCycle[tostring(PunchCombo.Value)] 
 	local Animation = Humanoid.Animator:LoadAnimation(Animation) -- gets necessary animation based on PunchCombo 
 	Animation:Play() -- plays animation 
-	if PunchCombo.Value >= #script.AnimationCycle:GetChildren() then -- iterates to next animation 
-		PunchCombo.Value = 1 
+	if Combo.Value == 1 then -- go to next animation
+		Combo.Value = 2
 	else 
-		PunchCombo.Value += 1 
+		Combo.Value = 1
 	end 
 	task.wait(Animation.Length) -- wait for the animation to end 
 	if Debounces[Player] then -- allows new animations to begin 
