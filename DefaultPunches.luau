@@ -4,8 +4,8 @@ ReplicatedStorage.Events.Punch.OnServerEvent:Connect(function(Player)
 	local Character = Player.Character -- gets the players character  
 	Debounces[Player] = true -- to stop animation overlapping once one starts 
 	local Combo = Player.Values.Combo -- checks for current punch animation number 
-	local Animation = script.AnimationCycle[tostring(PunchCombo.Value)] 
-	local Animation = Humanoid.Animator:LoadAnimation(Animation) -- gets necessary animation based on PunchCombo 
+	local Animation = script.AnimationCycle[tostring(Combo.Value)] 
+	local Animation = Humanoid.Animator:LoadAnimation(Animation) -- gets necessary animation based on Combo 
 	Animation:Play() -- plays animation 
 	if Combo.Value == 1 then -- go to next animation
 		Combo.Value = 2
