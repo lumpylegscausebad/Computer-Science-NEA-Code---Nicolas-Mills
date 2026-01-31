@@ -10,14 +10,14 @@ local Stun = RS.Events.Stun
 function CreateHitbox(Character, HitboxSize, Damage) -- create hitbox part
 	local Player = Players:GetPlayerFromCharacter(Character)
 	local Hitbox = Instance.new("Part")
-  -- set properities of hitbox
+	  -- set properities of hitbox
 	Hitbox.Transparency = 0.5
 	Hitbox.BrickColor = BrickColor.Red()
 	Hitbox.CanCollide = false
 	Hitbox.Anchored = false
 	Hitbox.Size = HitboxSize
 	Hitbox.CFrame = Character.HumanoidRootPart.CFrame * CFrame.new(0,-50,-100)
-  -- connect hitbox to the character
+ 	 -- connect hitbox to the character
 	local weld = Instance.new("WeldConstraint")
 	weld.Part0 = Character.Torso
 	weld.Part1 = Hitbox
@@ -45,7 +45,7 @@ function CreateHitbox(Character, HitboxSize, Damage) -- create hitbox part
 								user.Values.UltimateCounter.Value += 1 -- increment UltimateCounter if count is below 100
 							end
 							if Humanoid.Health == 0 then -- determine if the player died
-                -- adjust data
+               					 -- adjust data
 								Players:GetPlayerFromCharacter(Character).Data.Kills.Value += 1
 								Players:GetPlayerFromCharacter(Humanoid.Parent).Data.Deaths.Value += 1
 								RS.UpdateData:FireClient(Players:GetPlayerFromCharacter(Character))
@@ -54,12 +54,12 @@ function CreateHitbox(Character, HitboxSize, Damage) -- create hitbox part
 							Stun:FireClient(Players:GetPlayerFromCharacter(Humanoid.Parent), 3) -- apply stun if necessary
 							count = 100 -- end the loop
 						elseif Humanoid.Parent.Values.CanParry.Value == false then -- determine if the player should be block broken
-              -- block break the player
+              				-- block break the player
 							BlockBreak:FireClient(Players:GetPlayerFromCharacter(Humanoid.Parent))
 							Humanoid.Parent.Values.BlockCounter.Value = 0
 							Hitbox.BrickColor = BrickColor.Yellow()
 						elseif Humanoid.Parent.Values.CanParry.Value == true then -- determine if the player could parry
-              -- parry the user
+             				 -- parry the user
 							Parry:FireClient(Player)
 							Hitbox.BrickColor = BrickColor.Yellow()
 						end
