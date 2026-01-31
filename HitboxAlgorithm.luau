@@ -38,7 +38,7 @@ function CreateHitbox(Character, HitboxSize, Damage) -- create hitbox part
 					if Humanoid.Parent.Name ~= Character then
 						if Humanoid.Parent.Values.Blocking.Value == false then -- determine if the player is blocking
 							local Attack = script.Parent.Parent:WaitForChild("Values").Attack.Value
-							local Defence = Humanoid.Parent:WaitForChild("Values").Defense.Value
+							local Defence = Humanoid.Parent:WaitForChild("Values").Defence.Value
 							Humanoid.Health = math.max(0, Humanoid.Health - ((Damage * Attack) / Defence)) -- calculate damage
 							local user = Character
 							if user.Values.UltimateCounter.Value < 100 then
