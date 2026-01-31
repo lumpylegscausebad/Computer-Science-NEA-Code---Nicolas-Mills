@@ -71,6 +71,8 @@ local Blocked = ReplicatedStorage.Events.BlockedAttack
 local Taunt = ReplicatedStorage.Events.Taunt
 local JuggernautPassive = ReplicatedStorage.Events.Juggernaut.JuggernautPassive
 
+-- MAIN ABILITY SECTION
+
 UserInputService.InputBegan:Connect(function(Input, GameProcessedEvent) -- connects when the player inputs a key
 	if Input.KeyCode == Enum.KeyCode.Z then -- checks if the key is z
 		if IsAttacking == false and ZOnCooldown == false and script.Parent.Values.Stunned.Value == false then -- checks if the player isnt currently attacking and that this specific move is not on cooldown
@@ -315,7 +317,7 @@ UserInputService.InputEnded:Connect(function(Input, GameProcessedEvent)	-- stops
 	end
 end)
 
-ReplicatedStorage.Events.BlockBreak.OnClientEvent:Connect(function(player)
+ReplicatedStorage.Events.BlockBreak.OnClientEvent:Connect(function(player) -- send block breaks to the server
 	BlockBreak:FireServer()
 	BlockAnimation:Stop()
 	StoppedAttackingEvent:FireServer()
@@ -325,20 +327,21 @@ ReplicatedStorage.Events.BlockBreak.OnClientEvent:Connect(function(player)
 	blockcooldown = false
 end)
 
-ReplicatedStorage.Events.Parry.OnClientEvent:Connect(function(enemy)
+ReplicatedStorage.Events.Parry.OnClientEvent:Connect(function(enemy) -- send parries to the server
 	Parry:FireServer(enemy)
 end)
 
-ReplicatedStorage.Events.Stun.OnClientEvent:Connect(function(enemy, duration)
+ReplicatedStorage.Events.Stun.OnClientEvent:Connect(function(enemy, duration) -- send stuns to the server
 	Stun:FireServer(enemy, duration)
 end)
 
-ReplicatedStorage.Events.BlockedAttack.OnClientEvent:Connect(function(enemy)
+ReplicatedStorage.Events.BlockedAttack.OnClientEvent:Connect(function(enemy) -- send blocked attacks to the server
 	Blocked:FireServer(enemy)
 end)
 
-ReplicatedStorage.Events.Taunt.OnClientEvent:Connect(function(player, character)
+ReplicatedStorage.Events.Taunt.OnClientEvent:Connect(function(player, character) -- process taunts
 	Taunt:FireServer(player, character)
+	-- modify non-attacking abilities to be unusable and appear differently temporarily
 	Player.PlayerGui.NecromancerGUI.Attacks.Hypersensitivity.AttackName.Text = "[TAUNTED]"
 	TweenService:Create(Player.PlayerGui.NecromancerGUI.Attacks.Hypersensitivity.CanvasGroup.DebounceFrame, info1, {BackgroundColor3 = Color3.fromRGB(40, 40, 40)}):Play()
 	TweenService:Create(Player.PlayerGui.NecromancerGUI.Attacks.Hypersensitivity.AttackKeybind, info1, {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
@@ -349,6 +352,7 @@ ReplicatedStorage.Events.Taunt.OnClientEvent:Connect(function(player, character)
 	TweenService:Create(Player.PlayerGui.NecromancerGUI.Attacks.FromTheGrave.CanvasGroup.DebounceFrame, info1, {BackgroundColor3 = Color3.fromRGB(40, 40, 40)}):Play()
 	TweenService:Create(Player.PlayerGui.NecromancerGUI.Attacks.FromTheGrave.AttackKeybind, info1, {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
 	task.wait(30)
+	-- undo the modifications
 	Player.PlayerGui.NecromancerGUI.Attacks.Hypersensitivity.AttackName.Text = "Hypersensitivity"
 	TweenService:Create(Player.PlayerGui.NecromancerGUI.Attacks.Hypersensitivity.CanvasGroup.DebounceFrame, info1, {BackgroundColor3 = Color3.fromRGB(35, 150, 0)}):Play()
 	TweenService:Create(Player.PlayerGui.NecromancerGUI.Attacks.Hypersensitivity.AttackKeybind, info1, {TextColor3 = Color3.fromRGB(38, 255, 0)}):Play()
@@ -360,42 +364,43 @@ ReplicatedStorage.Events.Taunt.OnClientEvent:Connect(function(player, character)
 	TweenService:Create(Player.PlayerGui.NecromancerGUI.Attacks.FromTheGrave.AttackKeybind, info1, {TextColor3 = Color3.fromRGB(38, 255, 0)}):Play()
 end)
 
-ReplicatedStorage.Events.UTTVM.DeathScreenHit.OnClientEvent:Connect(function(player)
+ReplicatedStorage.Events.UTTVM.DeathScreenHit.OnClientEvent:Connect(function(player) -- process titan tv man's ultimate's screen effect
 	game:GetService("Lighting").UTTVMBlur.Enabled = true
 	task.wait(10)
 	game:GetService("Lighting").UTTVMBlur.Enabled = false
 end)
 
-ReplicatedStorage.UpdateData.OnClientEvent:Connect(function(player)
+ReplicatedStorage.UpdateData.OnClientEvent:Connect(function(player) -- update data
 	ReplicatedStorage.UpdateData:FireServer()
 end)
 
-script.Parent.Values.UltimateCounter:GetPropertyChangedSignal("Value"):Connect(function()
-	if UltimateActive == false then
-		local CurrentUltimate = math.max(0, Player.Character.Values.UltimateCounter.Value)
+script.Parent.Values.UltimateCounter:GetPropertyChangedSignal("Value"):Connect(function() -- detect increments to the ultimate counter
+	if UltimateActive == false then -- determine if the ultimate is disabled
+		local CurrentUltimate = math.max(0, Player.Character.Values.UltimateCounter.Value) -- get current ultimate value
 		local MaxUltimate = 50
+	    -- adjust size of the Ultimate UI bar
 		local targetSize = UDim2.new((CurrentUltimate / MaxUltimate) * 2, 0, 1, 0)
 		local tween = game:GetService("TweenService"):Create(Player.PlayerGui.NecromancerGUI.Middle.Ultimate.CanvasGroup.Frame, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = targetSize})
 		tween:Play()
 	end
 end)
 
-JuggernautPassive:FireServer()
+JuggernautPassive:FireServer() -- trigger the astro juggernaut's passive upon joining the match
 
-		-- all the ability guis are copied from this scripts children into the players playergui
-		ConjuredSlash:Clone()
-		ConjuredSlash.Parent = Attacks
-		FromTheGrave:Clone()
-		FromTheGrave.Parent = Attacks
-		LifeDrain:Clone()
-		LifeDrain.Parent = Attacks
-		RevenantHurl:Clone()
-		RevenantHurl.Parent = Attacks
-		Hypersensitivity:Clone()
-		Hypersensitivity.Parent = Attacks
-		SpectreForm:Clone()
-		SpectreForm.Parent = Attacks
-		Whiplash:Clone()
-		Whiplash.Parent = Attacks
-		Ultimate:Clone()
-		Ultimate.Parent = Middle
+-- all the ability guis are copied from this scripts children into the players playergui
+ConjuredSlash:Clone()
+ConjuredSlash.Parent = Attacks
+FromTheGrave:Clone()
+FromTheGrave.Parent = Attacks
+LifeDrain:Clone()
+LifeDrain.Parent = Attacks
+RevenantHurl:Clone()
+RevenantHurl.Parent = Attacks
+Hypersensitivity:Clone()
+Hypersensitivity.Parent = Attacks
+SpectreForm:Clone()
+SpectreForm.Parent = Attacks
+Whiplash:Clone()
+Whiplash.Parent = Attacks
+Ultimate:Clone()
+Ultimate.Parent = Middle
