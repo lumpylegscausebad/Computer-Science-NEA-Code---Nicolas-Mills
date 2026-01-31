@@ -1,7 +1,7 @@
 -- variables
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local changeattack = ReplicatedStorage.ChangeAttack
-local changedefence = ReplicatedStorage.ChangeDefense
+local changedefence = ReplicatedStorage.ChangeDefence
 local changespeed = ReplicatedStorage.ChangeSpeed
 local Players = game:GetService("Players")
 
@@ -28,25 +28,25 @@ ReplicatedStorage.ChangeAttack.OnServerEvent:Connect(function(player, amount, du
 	changeattack:FireAllClients() -- adjust the Modifier UI
 end)
 
-ReplicatedStorage.ChangeDefense.OnServerEvent:Connect(function(player, amount, duration, team) -- activates when a clients defence should be modified
+ReplicatedStorage.ChangeDefence.OnServerEvent:Connect(function(player, amount, duration, team) -- activates when a clients defence should be modified
 	local teammates = {} -- store teammates as an array
 	for _, v in Players:GetChildren() do -- iterate through every player in the game
 		local playerselected = v.Character
 		if playerselected:WaitForChild("Values").Team.Value == team then -- check if the players team is the same as the users
 			if team == 0 then -- check if the player is in a team based game mode
-				player.Character:WaitForChild("Values").Defense.Value = player.Character:WaitForChild("Values").Defense.Value  + amount -- adjust the users modifier
+				player.Character:WaitForChild("Values").Defence.Value = player.Character:WaitForChild("Values").Defence.Value  + amount -- adjust the users modifier
 				table.insert(teammates, playerselected) -- add user to teammates array
 				break
 			end
 			else -- for players in team based game modes
-				playerselected:WaitForChild("Values").Defense.Value = playerselected:WaitForChild("Values").Defense.Value + amount -- adjust modifier for the teammate
+				playerselected:WaitForChild("Values").Defence.Value = playerselected:WaitForChild("Values").Defence.Value + amount -- adjust modifier for the teammate
 				table.insert(teammates, playerselected) -- add the teammate to the teammates array
 		end
 	end
 	changedefence:FireAllClients() -- adjust the Modifier UI
 	task.wait(duration)
 	for _, v in teammates do -- iterate  through all teammates
-		v:WaitForChild("Values").Defense.Value = v:WaitForChild("Values").Defense.Value - amount -- remove the adjustment
+		v:WaitForChild("Values").Defence.Value = v:WaitForChild("Values").Defence.Value - amount -- remove the adjustment
 	end
 	changedefence:FireAllClients() -- adjust the Modifier UI
 end)
