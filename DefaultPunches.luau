@@ -18,6 +18,6 @@ Events.Punch.OnServerEvent:Connect(function(Player)
 		Debounces[Player] = nil 
 	end 
 	Animation:GetMarkerReachedSignal("Hit"):Connect(function() -- function activates when animation reaches a certain point 
-		createHitbox(Character, Vector3.new(9,9,5), 10) -- creates hitbox 
+		CreateHitbox(Character, Vector3.new(9,9,5), 10) -- creates hitbox 
 	end) 
 end) 
