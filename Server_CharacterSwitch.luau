@@ -1,6 +1,6 @@
 -- variables
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CharacterEvent = ReplicatedStorage:WaitForChild("ChangeCharacterEvent2")
+local CharacterEvent = ReplicatedStorage:WaitForChild("ChangeCharacterEvent")
 local CharactersFolder = ReplicatedStorage:WaitForChild("Characters")
 
 CharacterEvent.OnServerEvent:Connect(function(player, targetcharacter, skin, map) -- connects when CharacterEvent is fired by the server
@@ -19,11 +19,11 @@ CharacterEvent.OnServerEvent:Connect(function(player, targetcharacter, skin, map
 				if PlayerCharacter:FindFirstChild("Animate") and not NewCharacter:FindFirstChild("Animate") then
 					PlayerCharacter.Animate:Clone().Parent = NewCharacter
 				end
-        -- replacing health scripts
+        		-- replacing health scripts
 				if PlayerCharacter:FindFirstChild("Health") and not NewCharacter:FindFirstChild("Health") then
 					PlayerCharacter.Health:Clone().Parent = NewCharacter
 				end
-        -- creating the defaults for the character
+       		    -- creating the defaults for the character
 				player.Character = NewCharacter
 				local RootPart = NewCharacter:FindFirstChild("HumanoidRootPart")
 				local PlayerRoot = player.Character:FindFirstChild("HumanoidRootPart")
@@ -33,18 +33,48 @@ CharacterEvent.OnServerEvent:Connect(function(player, targetcharacter, skin, map
 				NewCharacter.Parent = game.Workspace
 				player.PlayerGui.UniversalGUI.Enabled = true
 				player.Character.Head.BillboardGui.PlayerToHideFrom = player
-				if player:WaitForChild("PersistentValues").Gamemode.Value == "FFA" then
-					player.PlayerGui.LeaveGUI.Enabled = true
+				if player.PersistentValues.Gamemode.Value == "FFA" then -- determine if the players game mode is Free-for-all
+					player.PlayerGui.LeaveGUI.Enabled = true -- enable Leave UI
+				-- change spawn location based on the players chosen map
+				if map == "AlphaHills" then
+					player.TeamColor = BrickColor.new("Really black")
+				elseif map == "Alaska" then
+					player.TeamColor = BrickColor.new("Dark stone grey")
+				elseif map == "Kyoto" then
+					player.TeamColor = BrickColor.new("Medium stone grey")
 				end
+				elseif player.PersistentValues.Gamemode.Value == "Squads" then -- determine if the players game mode is Squads
+					-- change spawn locations based on the players chosen map and their chosen team
+					if player.PersistentValues.Map.Value == "AlphaHills" then
+						if player.Team.Value == "Blue" then
+							player.TeamColor = BrickColor.new("Electric blue")
+						elseif player.Team.Value == "Red" then
+							player.TeamColor = BrickColor.new("Really red")
+						end
+					elseif player.PersistentValues.Map.Value == "Alaska" then
+						if player.Team.Value == "Blue" then
+							player.TeamColor = BrickColor.new("Bright blue")
+						elseif player.Team.Value == "Red" then
+							player.TeamColor = BrickColor.new("Bright red")
+						end
+					elseif player.PersistentValues.Map.Value == "Kyoto" then
+						if player.Team.Value == "Blue" then
+							player.TeamColor = BrickColor.new("Lapis")
+						elseif player.Team.Value == "Red" then
+							player.TeamColor = BrickColor.new("Maroon")
+						end
+					end
+				end
+				player.Character.Humanoid.Health = 0 -- remove the character to allow for a reset
 				-- base parts should be left unanchored so the player can move
 				for i, Part in pairs(NewCharacter:GetChildren()) do
 					if Part:IsA("BasePart") then
 						Part.Anchored = false
-          -- find the target character and skin, then update zoom controls and images based on the result
-					if targetcharacter == "Necromancer" or targetcharacter == "Necromancer_Noli"then
-						player.PlayerGui.UniversalGUI.HealthBackground.ImageLabel.Image = "http://www.roblox.com/asset/?id=125576680306354"
-						player.CameraMaxZoomDistance = 225
-						player.CameraMinZoomDistance = 15
+	                    -- find the target character and skin, then update zoom controls and images based on the result
+						if targetcharacter == "Necromancer" or targetcharacter == "Necromancer_Noli"then
+							player.PlayerGui.UniversalGUI.HealthBackground.ImageLabel.Image = "http://www.roblox.com/asset/?id=125576680306354"
+							player.CameraMaxZoomDistance = 225
+							player.CameraMinZoomDistance = 15
 					elseif targetcharacter == "Plungerman" or targetcharacter == "Plungerman_Mark" then
 							player.PlayerGui.UniversalGUI.HealthBackground.ImageLabel.Image = "http://www.roblox.com/asset/?id=138970494622489"
 							player.CameraMaxZoomDistance = 225
