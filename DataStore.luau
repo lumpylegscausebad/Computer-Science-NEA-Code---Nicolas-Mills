@@ -1,4 +1,4 @@
--- varaibles
+-- variables
 local DataStoreService = game:GetService("DataStoreService")
 local UserData = DataStoreService:GetDataStore("UserData")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
