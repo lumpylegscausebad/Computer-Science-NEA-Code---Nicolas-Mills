@@ -21,6 +21,6 @@ script.Parent.MouseButton1Click:Connect(function() -- activate when the settings
 		Settings:TweenPosition(UDim2.new(0.1, 0, 1, 0), "InOut", "Quad", 0.5, true) -- move the Settings UI off the screen
 		task.wait(0.5) 
 		Clickable = true -- make the button clickable
-		Settings.Close.TextButton.LocalScript.Enabled = true -- reenable the settigns script
+		Settings.Close.TextButton.LocalScript.Enabled = true -- reenable the settings script
 	end 
 end) 
